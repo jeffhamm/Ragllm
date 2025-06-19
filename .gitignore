@@ -1,5 +1,3 @@
-.venv
+*.env
 pdfs/
 faiss_index_store/
-*.pkl
-*.faiss
