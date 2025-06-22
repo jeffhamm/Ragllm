@@ -1,10 +1,9 @@
 import os
-from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
+from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader, UnstructuredPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import OpenAIEmbeddings # Or your preferred embedding model
 from langchain_community.vectorstores import FAISS # Assuming you're using LangChain's FAISS integration
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_text_splitters import CharacterTextSplitter
 
 # --- Configuration ---
 VECTOR_DB_DIR = "faiss_index_store" # Directory where your FAISS index will be saved
@@ -33,16 +32,25 @@ def delete_old_faiss_index(db_path):
 
 # --- Step 2 & 3: Load, Chunk, and Embed All Current Documents ---
 def process_documents(documents_directory, embedding_model_name):
-    print(f"Loading documents from {documents_directory}...")
-    loader = DirectoryLoader(documents_directory, glob="**/*.pdf", loader_cls=PyPDFLoader)
+    # print(f"Loading documents from {documents_directory}...")
+
+    
+    loader = DirectoryLoader(
+        documents_directory, 
+        glob="**/*.pdf", 
+        loader_cls=UnstructuredPDFLoader,
+        loader_kwargs={"mode": "elements", "strategy": "hi_res" # "hi_res" is good for tables/charts
+    }
+        )
     documents = loader.load()
     # print(f"Loaded {len(documents)} raw documents.")
 
-    text_splitter = CharacterTextSplitter(
-        chunk_size=500,
-        chunk_overlap=100,
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200,
         length_function=len,
-        is_separator_regex=False,
+        # is_separator_regex=False,
+        add_start_index=True    # Add metadata for start index of chun
     )
     chunks = text_splitter.split_documents(documents)
     # print(f"Split into {len(chunks)} chunks.")
@@ -94,14 +102,4 @@ if __name__ == "__main__":
         allow_dangerous_deserialization=True # Required for loading FAISS indexes from disk
     )
 
-    # Example RAG query
-    query = "What is the main topic of the new document?" # Replace with a query specific to your new PDF
-    retrieved_docs = loaded_db.similarity_search(query, k=3)
-
-    print("\n--- Retrieved Documents for Query ---")
-    for i, doc in enumerate(retrieved_docs):
-        print(f"Document {i+1} (Source: {doc.metadata.get('source', 'N/A')}):")
-        print(doc.page_content[:200] + "...") # Print first 200 chars of content
-        print("-" * 20)
-
-    # You would then pass these retrieved_docs to your LLM for generation
+    

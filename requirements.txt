@@ -1,0 +1,13 @@
+streamlit
+langchain-community
+langchain
+langchain-huggingface
+faiss-cpu
+langchain-core
+langchain-text-splitters
+unstructured
+pi-heif
+numpy
+tqdm
+python-dotenv
+langchain-ollama

@@ -1,8 +1,9 @@
 # chatbot_core.py: This module defines the core logic of the PDFchatbot.
 # It builds a RAG pipeline using LangChain.
 
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import CharacterTextSplitter
+from langchain_community.document_loaders import UnstructuredPDFLoader, DirectoryLoader,PyPDFLoader
+
+from langchain_text_splitters import CharacterTextSplitter, RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_ollama.chat_models import ChatOllama
