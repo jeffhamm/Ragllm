@@ -11,3 +11,8 @@ numpy
 tqdm
 python-dotenv
 langchain-ollama
+pdfminer.six
+unstructured[pdf]
+langchain-openai
+onnxruntime
+sentence-transformers

@@ -6,9 +6,9 @@ from langchain_community.vectorstores import FAISS # Assuming you're using LangC
 from langchain_huggingface import HuggingFaceEmbeddings
 
 # --- Configuration ---
-VECTOR_DB_DIR = "faiss_index_store" # Directory where your FAISS index will be saved
-DOCUMENTS_DIR = "documents" # Directory containing your PDFs
-EMBEDDING_MODEL_NAME = "text-embedding-ada-002" # Or your chosen model (e.g., from HuggingFace, local)
+DB_PATH = "faiss_index_store" # Directory where your FAISS index will be saved
+DOCUMENTS_DIR = "pdfs" # Directory containing your PDFs
+EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2" # Or your chosen model (e.g., from HuggingFace, local)
 
 
 # --- Step 1: Delete the old FAISS index (if it exists) ---
@@ -91,15 +91,15 @@ if __name__ == "__main__":
         exit()
 
     # Rebuild the database
-    faiss_db = rebuild_faiss_database(DOCUMENTS_DIR, VECTOR_DB_DIR, EMBEDDING_MODEL_NAME)
+    faiss_db = rebuild_faiss_database(DOCUMENTS_DIR, DB_PATH, EMBEDDING_MODEL_NAME)
 
     # Now you can load and use the new database in your RAG application
-    print(f"Loading the newly built FAISS index from {VECTOR_DB_DIR} for RAG operations...")
-    # Make sure to load with the same embedding model
-    loaded_db = FAISS.load_local(
-        VECTOR_DB_DIR,
-        OpenAIEmbeddings(model=EMBEDDING_MODEL_NAME),
-        allow_dangerous_deserialization=True # Required for loading FAISS indexes from disk
-    )
+    # print(f"Loading the newly built FAISS index from {DB_PATH} for RAG operations...")
+    # # Make sure to load with the same embedding model
+    # loaded_db = FAISS.load_local(
+    #     DB_PATH,
+    #     HuggingFaceEmbeddings(model=EMBEDDING_MODEL_NAME),
+    #     allow_dangerous_deserialization=True # Required for loading FAISS indexes from disk
+    # )
 
     

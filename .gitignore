@@ -1,3 +1,9 @@
-*.env
+node_modules/
+*.log
+.env
+__pycache__/
+
 pdfs/
 faiss_index_store/
+.ipynb_checkpoints/
+.streamlit/
