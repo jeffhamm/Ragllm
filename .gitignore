@@ -7,3 +7,4 @@ pdfs/
 faiss_index_store/
 .ipynb_checkpoints/
 .streamlit/
+.gitignore
