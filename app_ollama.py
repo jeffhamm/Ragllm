@@ -1,4 +1,4 @@
-# app_ollama.py
+
 import streamlit as st
 from utils_ollama import get_answer
 import os
